@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfDeviceDetails xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DeviceDetails>
+    <HostName>Unknown</HostName>
+    <IpAddress>192.168.1.2</IpAddress>
+    <Type>PC</Type>
+    <MacAddress>80:56:f2:2e:15:1f</MacAddress>
+    <Latency>0</Latency>
+  </DeviceDetails>
+  <DeviceDetails>
+    <HostName>Default Gateway</HostName>
+    <IpAddress>192.168.1.254</IpAddress>
+    <Type>Router</Type>
+    <MacAddress>cc:5d:4e:dc:c1:80</MacAddress>
+    <Latency>1</Latency>
+  </DeviceDetails>
+  <DeviceDetails>
+    <HostName>Unknown</HostName>
+    <IpAddress>192.168.1.3</IpAddress>
+    <Type>PC</Type>
+    <MacAddress>04:46:65:4c:2a:e2</MacAddress>
+    <Latency>-1</Latency>
+  </DeviceDetails>
+</ArrayOfDeviceDetails>
