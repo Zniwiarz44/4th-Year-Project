@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/dark"
+        android:weightSum="1"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/ping"
+            android:id="@+id/tvPing"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:background="@color/orange"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/target"
+            android:textColor="@color/white"
+            android:paddingTop="18dp"
+            android:paddingLeft="5dp"
+            android:id="@+id/tvTarget" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:textColor="@color/white"
+            android:id="@+id/eTarget" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ping"
+                android:onClick="pingTarget"
+                android:textColor="@color/black"
+                android:id="@+id/bPing"
+                android:background="@color/lightDark"
+                android:layout_margin="5dp"
+                style="@style/Base.Theme.AppCompat.Light.Dialog"
+                android:layout_row="0"
+                android:layout_column="0" />
+
+            <Button
+                style="@style/Base.Theme.AppCompat.Light.Dialog"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:text="@string/defaultG"
+                android:onClick="pingDefault"
+                android:textColor="@color/black"
+                android:id="@+id/bDefault"
+                android:background="@color/lightDark"
+                android:layout_margin="5dp"
+                android:layout_row="0"
+                android:layout_column="1" />
+        </GridLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/output"
+                android:textColor="@color/white"
+                android:paddingTop="18dp"
+                android:id="@+id/tvOutput" />
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

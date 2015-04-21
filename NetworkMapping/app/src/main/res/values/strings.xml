@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Network Mapping</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="loginTitle">Login</string>
+    <string name="email">Email: </string>
+    <string name="password">Password: </string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="confPass">Confirm password:</string>
+    <string name="register2">Register</string>
+    <string name="skip">Skip</string>
+    <string name="defaultG">Ping default gateway</string>
+    <string name="output">Output:</string>
+    <string name="dns1">DNS1: </string>
+    <string name="dns2">DNS2: </string>
+    <string name="ipaddress">IP Address: </string>
+    <string name="subnet">Subnet mask: </string>
+    <string name="defaultGateway">Default Gateway: </string>
+    <string name="serverIP">Server IP: </string>
+    <string name="lease">Lease Time: </string>
+    <string name="wifi">wifi </string>
+    <string name="ping">Ping</string>
+    <string name="target">Target ip address:</string>
+    <string name="sweep">Ping sweep</string>
+
+</resources>
