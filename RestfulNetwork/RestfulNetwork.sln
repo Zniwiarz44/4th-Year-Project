@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestfulNetwork", "RestfulNetwork\RestfulNetwork.csproj", "{FFE1508D-D635-4A9A-AC95-B5838A0A26DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{5CAAF83A-6399-499E-AE04-912C254B0A0F}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\AzureWebsitePublishModule.psm1 = PublishScripts\AzureWebsitePublishModule.psm1
+		PublishScripts\Publish-WebApplicationWebsite.ps1 = PublishScripts\Publish-WebApplicationWebsite.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{0C47A03B-C721-43F7-AC0B-CC000E3D4E7C}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Configurations\RestfulNetwork-WAWS-dev.json = PublishScripts\Configurations\RestfulNetwork-WAWS-dev.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{395E9279-5575-4E5C-8D4C-AD2743FB5BCB}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFE1508D-D635-4A9A-AC95-B5838A0A26DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFE1508D-D635-4A9A-AC95-B5838A0A26DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFE1508D-D635-4A9A-AC95-B5838A0A26DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFE1508D-D635-4A9A-AC95-B5838A0A26DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0C47A03B-C721-43F7-AC0B-CC000E3D4E7C} = {5CAAF83A-6399-499E-AE04-912C254B0A0F}
+	EndGlobalSection
+EndGlobal
