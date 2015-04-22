@@ -28,7 +28,7 @@ namespace Project_v1._0._2
         {
 
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://restfulsoftwaremapping.azurewebsites.net/");                             // base URL for API Controller i.e. RESTFul service
+            client.BaseAddress = new Uri("http://restfulnetwork.azurewebsites.net/");                             // base URL for API Controller i.e. RESTFul service
             // add an Accept header for JSON
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));            // or application/xml
             try
@@ -61,7 +61,7 @@ namespace Project_v1._0._2
         public async Task LoginUser(string email, string password)
         {
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://restfulsoftwaremapping.azurewebsites.net/");                             // base URL for API Controller i.e. RESTFul service
+            client.BaseAddress = new Uri("http://restfulnetwork.azurewebsites.net/");                             // base URL for API Controller i.e. RESTFul service
             // add an Accept header for JSON
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));            // or application/xml
             //AddExternalLoginBindingModel tokenResponse;
@@ -70,7 +70,7 @@ namespace Project_v1._0._2
                 ASCIIEncoding encoding = new ASCIIEncoding();
                 string postData = "username=" + email + "&password="+password+"&grant_type=password";
                 byte[] data = encoding.GetBytes(postData);
-                WebRequest request = WebRequest.Create("http://restfulsoftwaremapping.azurewebsites.net/Token");
+                WebRequest request = WebRequest.Create("http://restfulnetwork.azurewebsites.net//Token");
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = data.Length;

@@ -44,6 +44,8 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using PacketDotNet;
 using SharpPcap;
 using SnmpSharpNet;
+using NativeWifi;
+using System.Windows.Shapes;
 
 
 //http://www.dreamincode.net/forums/topic/191471-reading-and-writing-xml-using-serialization/
@@ -66,6 +68,8 @@ namespace Project_v1._0._2
     public partial class MainWindow : Window
     {
         #region Local variables
+        private double actualAngleT = Math.PI * 90 / 180.0;
+        private double actualAngle2T = Math.PI * 360 / 180.0;
 
         private int counter = 0;                            // Used for worker2
         private int monitorFrequency = 10;                  // 20sec
@@ -74,12 +78,12 @@ namespace Project_v1._0._2
         private int timerCounter = 0;                       // Make sure the timer is entered only once
         private int panelHeight = 165;                      // Initial login panel height
         private int borderCount = 0;                        // Keeps track of border animation
-        private int ndevice = 0;                            // Index of selected interface
+        //  private int ndevice = 0;                            // Index of selected interface
         private int snmpCounter = 0;                        // Keep track of numbers of calls for snmp
         private int performanceCounter = 1;                 // Network 1 or 2
         private const int RESPOND_TIME = 65;                // On average routers need 60sec to restart, so if some devices are down check in 65sec if they are active
 
-        private bool firstIteration = true;
+        //     private bool firstIteration = true;
         private bool click = false;                         // Play/Stop button
         private bool enablePlayButton = false;              // Determines when Play button is available
         private bool bContinueCapturing = false;            // A flag to check if packets are to be captured or not
@@ -98,12 +102,16 @@ namespace Project_v1._0._2
         private string network1CSV = null;                  // Store filenames to later use them to load data using graph
         private string network2CSV = null;                  // They are used just for network comparing
 
-        private static List<string> monitorArray = new List<string>();                      // Contains list of ip addresses
+        int[] tempArray = new int[8];
         private List<NetworkInfo> netInfoList = new List<NetworkInfo>();                    // Contains information necessary for the graph to be drawn
         private List<NetworkInfo> net1InfoList = new List<NetworkInfo>();                   // These lists store information for network comparison
         private List<NetworkInfo> net2InfoList = new List<NetworkInfo>();
         private List<string> inactiveDevices = new List<string>();                          // When device becomes offline is added to this list to perform a check with inactiveCheck()
+        private List<string> accessPointList = new List<string>();                          // Stores access points mac addressess to check if they are already discovered
+        private static List<string> monitorArray = new List<string>();                      // Contains list of ip addresses
         private static List<NetworkStatus> monitorTempList = new List<NetworkStatus>();     // Temp array to store values from MonitorNetwork.cs so the can be added to the UI
+
+
 
         private DispatcherTimer timer = new DispatcherTimer();              // Timer for frequent monitoring
         private DispatcherTimer timerInactive = new DispatcherTimer();      // Timer for inactive devices
@@ -139,17 +147,16 @@ namespace Project_v1._0._2
             myIpAddress = networkList.getNetworkAddress();              // Sets IP address
             MyIpAddress.Content = myIpAddress;
             wifi = networkList.checkNetworkType();
-            if (!wifi)       // If not using wifi let the user to pick the interface to listen for packets CDP
+            if (!wifi)                                                  // If not using wifi let the user to pick the interface to listen for packets CDP
             {
 
             }
+            else
+            {
+                scanAccessPoints();                                     // Execute this code only when connected to the wi-fi
+            }
             /*Initialize Combobox*/
             ComboBoxItem newitem = new ComboBoxItem();
-            //newitem.Content = "test 1";
-            /*  AvailableNetworks.Items.Add("Settings");
-              AvailableNetworks.Items.Add("Monitoring");
-              AvailableNetworks.SelectedIndex = 0;*/
-            //   FillDataGrid();
             RunGridAnimation();
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -182,7 +189,7 @@ namespace Project_v1._0._2
                     worker.RunWorkerCompleted += worker_RunWorkerCompleted; // Update UI once the scan is completed
                     worker.RunWorkerAsync();                                // Kick off new thread
                 }
-                firstIteration = true;
+                //firstIteration = true;
             }
         }
         private void PrepareForMonitoring()
@@ -204,11 +211,19 @@ namespace Project_v1._0._2
                 MyXML.GetObject(ref p.lanDeviceDetails, fileNameXML);       //-----<READ FILE>------
                 foreach (DeviceDetails dd in p.lanDeviceDetails)
                 {
-                    if (dd.IpAddress.Equals(defaultIpGateway))
+                    try
                     {
-                        foundDefault = true;
-                        break;
+                        if (dd.IpAddress.Equals(defaultIpGateway))
+                        {
+                            foundDefault = true;
+                            break;
+                        }
                     }
+                    catch (ArgumentNullException ex)
+                    {
+                        Debug.WriteLine("\n-----<ArgumentNullException>-----\nClass: MainWindow\nPrepareForMonitoring()\n" + ex.Message + "\n");
+                    }
+
                 }
             }
             if (!foundDefault)
@@ -218,7 +233,7 @@ namespace Project_v1._0._2
             }
             #endregion
             ScanButton.Content = "Scan";
-            if (scanWithSNMP)
+            if (scanWithSNMP)                                                   // If SNMP setting is checked
             {
                 if (worker2.IsBusy != true)
                 {
@@ -226,19 +241,79 @@ namespace Project_v1._0._2
                     {
                         snmpCounter++;
                     }
-                    worker3.DoWork += worker3_DoWork;                           // Perform ping sweep on this new thread
+                    worker3.DoWork += worker3_DoWork;                           // Scan devices for SNMP
                     worker3.RunWorkerCompleted += worker3_RunWorkerCompleted;   // Update UI once the scan is completed
                     worker3.RunWorkerAsync();                                   // Kick off new thread
                 }
             }
             else
             {
+                while (!checkAccessPoints()) ;
                 ScanButton.IsEnabled = true;                                    // Enable scan button
                 LoadDeviceMap();
                 BeginMonitoring();
             }
         }
-        public bool checkForSNMP()
+        private bool checkAccessPoints()
+        {
+            bool found = false;
+            Pingers p = new Pingers();
+            MyXML.GetObject(ref p.lanDeviceDetails, fileNameXML);               //-----<READ FILE>------
+
+            foreach (string ap in accessPointList)
+            {
+                Debug.WriteLine("Checking " + ap);
+                found = false;
+                foreach (DeviceDetails dd in p.lanDeviceDetails)
+                {
+                    if (dd.MacAddress.Equals(ap))
+                    {
+                        found = true;
+                        if (!dd.Type.Equals(deviceType.Router))
+                        {
+                            dd.Type = deviceType.AccessPoint;
+                            lock (lockFileRead)
+                            {
+                                MyXML.SaveObject(p.lanDeviceDetails, fileNameXML);
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!found)      // If access point is not found add it to the list
+                {
+                    DeviceDetails devd = new DeviceDetails("0.0.0.0", "Unknown", deviceType.AccessPoint, ap, 0, "Unknown", "", false);
+                    p.lanDeviceDetails.Add(devd);
+                    lock (lockFileRead)
+                    {
+                        MyXML.SaveObject(p.lanDeviceDetails, fileNameXML);
+                    }
+                }
+            }
+            return true;
+        }                                     // Checks if access point was alread found
+        private void scanAccessPoints()
+        {
+            WlanClient client = new WlanClient();
+            foreach (WlanClient.WlanInterface wlanIface in client.Interfaces)
+            {
+                Wlan.WlanBssEntry[] wlanBssEntries = wlanIface.GetNetworkBssList();
+                foreach (Wlan.WlanBssEntry wlanBssEntry in wlanBssEntries)
+                {
+                    byte[] macAddr = wlanBssEntry.dot11Bssid;
+                    var macAddrLen = (uint)macAddr.Length;
+                    var str = new string[(int)macAddrLen];
+                    for (int i = 0; i < macAddrLen; i++)
+                    {
+                        str[i] = macAddr[i].ToString("x2");
+                    }
+                    string mac = string.Join(":", str);         // Mac address of an access point
+                    accessPointList.Add(mac);                   // Add mac addres to the access point list
+                    Debug.WriteLine("BSSID " + mac);
+                }
+            }
+        }
+        private bool checkForSNMP()
         {
             // SNMP community name
             OctetString community = new OctetString(communitySNMP);
@@ -335,7 +410,7 @@ namespace Project_v1._0._2
                 lock (lockCounter)
                 {
                     mapCounter++;
-                    timerCounter = 1;      // This will allow the tickTime to run
+                    timerCounter++;      // This will allow the tickTime to run (1)
                 }
                 PrepareForMonitoring();
             }
@@ -343,46 +418,55 @@ namespace Project_v1._0._2
         //-----<Monitoring>-----
         private void worker2_DoWork(object sender, DoWorkEventArgs e)
         {
-            Pingers p = new Pingers();
-
-            MyXML.GetObject(ref p.lanDeviceDetails, fileNameXML);       ///-----<READ FILE>------
-
-            foreach (DeviceDetails dd in p.lanDeviceDetails)            // Update latency on each device
+            if (timerCounter == 1)
             {
-                if (monitorArray.Contains(dd.IpAddress)) { }            // Do not allow duplicates
-                else { monitorArray.Add(dd.IpAddress); }
+                timerCounter--; // (0)
+                Pingers p = new Pingers();
+                Debug.WriteLine("worker2_DoWork GetObject()");
+                MyXML.GetObject(ref p.lanDeviceDetails, fileNameXML);       ///-----<READ FILE>------
+
+                foreach (DeviceDetails dd in p.lanDeviceDetails)            // Update latency on each device
+                {
+                    if (monitorArray.Contains(dd.IpAddress)) { }            // Do not allow duplicates
+                    else { monitorArray.Add(dd.IpAddress); }
+                }
+
+                int monitorLength = monitorArray.Count;
+                MonitorNetwork mn = new MonitorNetwork();
+
+                mn.RunPingers(monitorArray, fileNameXML);                           // Send heart beat packets to known devices MonitorNetwork.cs
+                while (mn.GetCompletedInstances < monitorLength) ;
+                Debug.WriteLine("worker2_DoWork Completed requests: {0}", mn.GetCompletedInstances);
+                lock (lockUpdateNet)
+                {
+                    monitorTempList.Clear();                                        // Clear the buffer and get ready to capute new status.    
+                    foreach (NetworkStatus ns in mn.NetworkMonitorList)
+                    {
+                        monitorTempList.Add(ns);
+                    }
+                    mn.RemoveNetworkStatus();
+                }
             }
 
-            int monitorLength = monitorArray.Count;
-            MonitorNetwork mn = new MonitorNetwork();
-
-            mn.RunPingers(monitorArray, fileNameXML);                                   // Send heart beat packets to known devices MonitorNetwork.cs
-            while (mn.GetCompletedInstances < monitorLength) ;
-            Debug.WriteLine("Worker2 Completed requests: {0}", mn.GetCompletedInstances);
-            monitorTempList.Clear();
-            foreach (NetworkStatus ns in mn.NetworkMonitorList)
-            {
-                monitorTempList.Add(ns);
-            }
-            mn.RemoveNetworkStatus();
         }
         private void worker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //grdEmployee.Items.Clear();
-            foreach (NetworkStatus ns in monitorTempList)
-            {
-                //  MessageBox.Show(ns.Name + "");
-                grdEmployee.Items.Add(ns);                              // Populate the grid in MainWindow.xml with ipaddresses and their status
-            }
-            monitorTempList.Clear();                                    // Clear the buffer and get ready to capute new status.      
             if (counter == 1)
             {
+                grdIpAddresses.Items.Clear();
+                Debug.WriteLine("worker2_DoWork cleaning grdIpAddresses");
+                foreach (NetworkStatus ns in monitorTempList)
+                {
+                    //  MessageBox.Show(ns.Name + "");
+                    grdIpAddresses.Items.Add(ns);                              // Populate the grid in MainWindow.xml with ipaddresses and their status
+                }
                 lock (lockCounter)
                 {
                     counter--;
-                    updateDevices();                                    // WARNING this should also be a separate thread
+                    updateDevices();
+                    // WARNING this should also be a separate thread
                     //MessageBox.Show("UPDATE");
-                    if (inactiveDevices.Count > 0)
+                    if (inactiveDevices.Count > 0 && monitorFrequency > 65)
                     {
                         inactiveCheck();
                     }
@@ -410,6 +494,7 @@ namespace Project_v1._0._2
                 if (completedSNMPScan)
                 {
                     ScanButton.IsEnabled = true;                                    // Enable scan button
+                    while (!checkAccessPoints()) ;
                     LoadDeviceMap();
                     BeginMonitoring();
                 }
@@ -435,7 +520,7 @@ namespace Project_v1._0._2
             {
                 if (timerCounter == 1)// WARNING, ENTER THIS ONLY ONCE
                 {
-                    timerCounter--;
+                    timerCounter--;     // (0)
                     timer.Tick += timer_Tick;
                 }
             }
@@ -444,17 +529,22 @@ namespace Project_v1._0._2
         }
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (worker2.IsBusy != true)
+            if (timerCounter == 0)
             {
-                Debug.WriteLine("\n-----<timer_Tick>-----\n");
-                lock (lockCounter)
+                if (worker2.IsBusy != true)
                 {
-                    counter++;
+                    Debug.WriteLine("\n-----<timer_Tick>-----\n");
+                    lock (lockCounter)
+                    {
+                        counter++;
+                        timerCounter++; // (1)
+                        worker2.DoWork += worker2_DoWork;                           // Perform ping sweep on this new thread
+                        worker2.RunWorkerCompleted += worker2_RunWorkerCompleted;   // Update UI once the scan is completed
+                        worker2.RunWorkerAsync();                                   // Kick off new thread
+                    }
                 }
-                worker2.DoWork += worker2_DoWork;                           // Perform ping sweep on this new thread
-                worker2.RunWorkerCompleted += worker2_RunWorkerCompleted;   // Update UI once the scan is completed
-                worker2.RunWorkerAsync();                                   // Kick off new thread
             }
+
         }
         private void updateDevices()
         {   //Variables for the NetworkPerformance()
@@ -462,22 +552,14 @@ namespace Project_v1._0._2
             float daley = 0;
 
             Pingers p = new Pingers();
+            Debug.WriteLine("updateDevices() GetObject()");
             MyXML.GetObject(ref p.lanDeviceDetails, fileNameXML);
-
             foreach (DeviceDetails dd in p.lanDeviceDetails)            // Update latency on each device
             {
                 if (dd.Latency >= 0)
                 {
                     iterator++;
                     daley += dd.Latency / iterator;                     // Calculate average daley and pass that to the NetworkPerformance() when the forloop finishes
-
-                    /*   ThreadStart start = delegate()
-                       {
-                           Dispatcher.Invoke(DispatcherPriority.Background, new Action<int, float>(NetworkPerformance), iterator, daley);
-                       };
-                       // Create the thread and kick it started! 
-                       new Thread(start).Start();*/
-
                 }
                 foreach (Button b in FindVisualChildren<Button>(this))  // Find all buttons, we're looking for the ones dynamically created
                 {
@@ -488,6 +570,7 @@ namespace Project_v1._0._2
                             if (dd.Latency < 0)                         // if device is not responding change its icon
                             {
                                 inactiveDevices.Add(dd.IpAddress);      // Add device to list with not responding devices
+                                Debug.WriteLine("updateDevices() adding inactive device");
                                 switch (dd.Type)
                                 {
                                     case deviceType.PC:
@@ -502,6 +585,22 @@ namespace Project_v1._0._2
                                         b.Content = new Image
                                         {
                                             Source = new BitmapImage(new Uri(@"Images/GUI_Router_Warning.png", UriKind.Relative)),
+                                            VerticalAlignment = VerticalAlignment.Center,
+                                            Stretch = Stretch.Fill
+                                        };
+                                        break;
+                                    case deviceType.Smartphone:
+                                        b.Content = new Image
+                                        {
+                                            Source = new BitmapImage(new Uri(@"Images/GUI_Mobile_Warning.png", UriKind.Relative)),
+                                            VerticalAlignment = VerticalAlignment.Center,
+                                            Stretch = Stretch.Fill
+                                        };
+                                        break;
+                                    case deviceType.AccessPoint:
+                                        b.Content = new Image
+                                        {
+                                            Source = new BitmapImage(new Uri(@"Images/GUI_AccessPoint.png", UriKind.Relative)),
                                             VerticalAlignment = VerticalAlignment.Center,
                                             Stretch = Stretch.Fill
                                         };
@@ -524,6 +623,22 @@ namespace Project_v1._0._2
                                         b.Content = new Image
                                         {
                                             Source = new BitmapImage(new Uri(@"Images/GUI_Router.png", UriKind.Relative)),
+                                            VerticalAlignment = VerticalAlignment.Center,
+                                            Stretch = Stretch.Fill
+                                        };
+                                        break;
+                                    case deviceType.Smartphone:
+                                        b.Content = new Image
+                                        {
+                                            Source = new BitmapImage(new Uri(@"Images/GUI_Mobile.png", UriKind.Relative)),
+                                            VerticalAlignment = VerticalAlignment.Center,
+                                            Stretch = Stretch.Fill
+                                        };
+                                        break;
+                                    case deviceType.AccessPoint:
+                                        b.Content = new Image
+                                        {
+                                            Source = new BitmapImage(new Uri(@"Images/GUI_AccessPoint_Warning.png", UriKind.Relative)),
                                             VerticalAlignment = VerticalAlignment.Center,
                                             Stretch = Stretch.Fill
                                         };
@@ -570,7 +685,6 @@ namespace Project_v1._0._2
         }
         public void inactiveCheck()                                     // Check if devices are still inactive
         {
-
             InitializeComponent();
             timerInactive.Interval = TimeSpan.FromSeconds(RESPOND_TIME);  // Check if devices will respond
             timerInactive.Tick += timerInactive_Tick;
@@ -593,6 +707,7 @@ namespace Project_v1._0._2
         }
         private void NetworkPerformance(int iterator, float daley)      // Set the label colour depending on network average response time
         {
+            Debug.WriteLine("NetworkPerformance()");
             AvgDaley.Content = "Average daley: " + daley + "ms";
             NoDevices.Content = "No. devices: " + iterator;
             if (daley <= 50)
@@ -616,6 +731,7 @@ namespace Project_v1._0._2
                 // Create a file to write to. 
                 using (StreamWriter sw = File.CreateText(networkInfoFile))
                 {
+                    Debug.WriteLine("NetworkPerformance() creating new networkInfoFile");
                     sw.Write(DateTime.Now.ToLongTimeString() + "," + iterator + "," + daley);
                 }
             }
@@ -633,80 +749,41 @@ namespace Project_v1._0._2
             {
                 CanvasMain.Children.Remove(button);                         // Remove only buttons, that way this wont affect other children within CanvasMain eg: Grid
             }
+            var lines = CanvasMain.Children.OfType<Line>().ToList();        // Find all objects of type button
+            foreach (var line in lines)
+            {
+                CanvasMain.Children.Remove(line);                           // Remove only buttons, that way this wont affect other children within CanvasMain eg: Grid
+            }
             //MessageBox.Show("MAP"); //DEBUG
             //  List<DeviceDetails> ld = new List<DeviceDetails>();
+            // MessageBox.Show("MAP" + CanvasMain.ActualWidth + " " + CanvasMain.ActualHeight); //DEBUG
+
             try
             {
                 Pingers p = new Pingers();
-
                 MyXML.GetObject(ref p.lanDeviceDetails, fileNameXML);    //-----<READ FILE>------
-                int i = 100;
-                int iPrint = 100;
-                int topCount = 1;
-                int mapWidth = 1;
-                bool iterate = false;
                 //Variables for the NetworkPerformance()
                 int iterator = 0;
                 float daley = 0;
+                for (int i = 0; i < tempArray.Length; i++)
+                {
+                    tempArray[i] = 0;
+                }
+                // Router, PC, AccessPoint, Server, Printer, Undefined, default
                 foreach (DeviceDetails dd in p.lanDeviceDetails)
                 {
                     if (dd.Latency >= 0)
                     {
                         iterator++;
-                        daley += dd.Latency / iterator;     // Average daley, pass this parameter to NetworkPerformance() when forloop finishes
-
-                        /*   ThreadStart start = delegate()
-                           {
-                               Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action<int, float>(NetworkPerformance), iterator, daley);
-                           };
-                           // Create the thread and kick it started! 
-                           new Thread(start).Start();*/
-
+                        daley += dd.Latency / iterator;             // Average daley, pass this parameter to NetworkPerformance() when forloop finishes
                     }
-
-                    if (monitorArray.Contains(dd.IpAddress)) { }  // Do not allow duplicates
+                    if (monitorArray.Contains(dd.IpAddress)) { }    // Do not allow duplicates
                     else { monitorArray.Add(dd.IpAddress); }
+
                     switch (dd.Type)
                     {
-                        case deviceType.PC:
-                            Button myButton2 = new Button
-                            {
-                                Width = 70,
-                                Height = 70,
-                                Content = new Image
-                                {
-                                    Source = new BitmapImage(new Uri(@"Images/GUI_PC.png", UriKind.Relative)),
-                                    VerticalAlignment = VerticalAlignment.Center,
-                                    Stretch = Stretch.Fill
-                                }
-                            };
-                            myButton2.Background = Brushes.Transparent;
-                            myButton2.BorderBrush = Brushes.Transparent;
-                            myButton2.Tag = dd.IpAddress;
-                            myButton2.Click += new RoutedEventHandler(MakeButtonClickHandler());
-                            CanvasMain.Children.Add(myButton2);
-                            if (i > 400 || topCount > 1 || iterate)
-                            {
-                                iterate = true;
-                                Canvas.SetTop(myButton2, 60 * topCount);
-                                if (mapWidth > 4)
-                                {
-                                    mapWidth = 1;
-                                    i = 100;
-                                    if (firstIteration == false)
-                                    {
-                                        topCount++;
-                                    }
-                                    firstIteration = false;//Kind of working
-
-                                }
-                            }
-                            Canvas.SetLeft(myButton2, i);
-                            i += 100;
-                            mapWidth++;
-                            break;
-
                         case deviceType.Router:
+                            //tempArray[0] += 1;
                             Button myButton = new Button
                             {
                                 Width = 70,
@@ -722,47 +799,376 @@ namespace Project_v1._0._2
                             };
                             myButton.Tag = dd.IpAddress;
                             myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
-                            /* Image router = new Image
-                             {
-                                 Width = 50,
-                                 Source = new BitmapImage(new Uri(@"Images/GUI_Cluster2.png", UriKind.Relative))
-                             };*/
                             CanvasMain.Children.Add(myButton);
-                            Canvas.SetTop(myButton, 50);
+                            Canvas.SetTop(myButton, CanvasMain.ActualHeight / 2 - 50);
                             break;
-
+                        case deviceType.PC:
+                            tempArray[1] += 1;
+                            break;
+                        case deviceType.AccessPoint:
+                            tempArray[2] += 1;
+                            break;
+                        case deviceType.Server:
+                            tempArray[3] += 1;
+                            break;
                         case deviceType.Printer:
-                            Image printer = new Image
-                            {
-                                Width = 50,
-                                Source = new BitmapImage(new Uri(@"Images/Printer.jpg", UriKind.Relative))
-                            };
-                            CanvasMain.Children.Add(printer);
-                            Canvas.SetTop(printer, 70);
-                            Canvas.SetLeft(printer, iPrint);
-                            iPrint += 100;
+                            tempArray[4] += 1;
                             break;
-
+                        case deviceType.Smartphone:
+                            tempArray[5] += 1;
+                            break;
+                        case deviceType.Undefined:
+                            tempArray[6] += 1;
+                            break;
                         default:
-                            Image und = new Image
-                            {
-                                Width = 50,
-                                Source = new BitmapImage(new Uri(@"Images/GUI_PC.png", UriKind.Relative))
-                            };
-                            CanvasMain.Children.Add(und);
-                            Canvas.SetLeft(und, i);
+                            tempArray[7] += 1;
                             break;
                     }
                 }
-                NetworkPerformance(iterator, daley);   // Calculate average network performance
+                int clusters = 0;
+                for (int i = 0; i < tempArray.Length; i++)
+                {
+                    if (tempArray[i] > 0)
+                    {
+                        clusters++;
+                    }
+                }
+                clusters += 1;
+                double position = CanvasMain.ActualHeight / clusters;
+                double increase = position + 10;
 
+                // Draw clusters
+                for (int i = 0; i < tempArray.Length; i++)
+                {
+                    if (tempArray[i] > 0)
+                    {
+                        // Draw a line from router
+                        Line lineR = new Line();
+                        lineR.Stroke = Brushes.LightSteelBlue;
+
+                        lineR.StrokeThickness = 2;
+                        lineR.X1 = 65;
+                        lineR.Y1 = (CanvasMain.ActualHeight / 2 - 50) + 36;
+
+                        Button myButton = new Button
+                        {
+                            Width = 70,
+                            Height = 66,
+                            Background = Brushes.Transparent,
+                            BorderBrush = Brushes.Transparent,
+                            Content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(@"Images/GUI_Cluster2.png", UriKind.Relative)),
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Stretch = Stretch.Fill
+                            }
+                        };
+                        CanvasMain.Children.Add(myButton);
+                        Canvas.SetTop(myButton, position - 60);
+                        Canvas.SetLeft(myButton, 150);
+                        lineR.X2 = 150;
+                        lineR.Y2 = (position - 60) + 36;
+                        CanvasMain.Children.Add(lineR);
+                        switch (i)      // Warning, wasetful code, should use a method
+                        {
+                            case 1:
+                                myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                myButton.Tag = "PCCluster";
+                                double left = 200;
+                                double positionTop = -120;
+                                Line line = new Line();
+                                line.Stroke = Brushes.LightSteelBlue;
+                                line.StrokeThickness = 2;
+                                line.X1 = 215;
+                                line.Y1 = position - 45;
+                                line.X2 = 265;
+                                line.Y2 = (position + positionTop) + 36;
+                                CanvasMain.Children.Add(line);
+                                foreach (DeviceDetails dd in p.lanDeviceDetails)
+                                {
+                                    if (dd.Type.ToString().Equals("PC"))
+                                    {
+                                        left += 60;
+                                        Button myButton1 = new Button
+                                        {
+                                            Width = 70,
+                                            Height = 66,
+                                            Background = Brushes.Transparent,
+                                            BorderBrush = Brushes.Transparent,
+                                            Content = new Image
+                                            {
+                                                Source = new BitmapImage(new Uri(@"Images/GUI_PC.png", UriKind.Relative)),
+                                                VerticalAlignment = VerticalAlignment.Center,
+                                                Stretch = Stretch.Fill
+                                            }
+                                        };
+                                        myButton1.Tag = dd.IpAddress;
+                                        myButton1.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                        CanvasMain.Children.Add(myButton1);
+                                        Canvas.SetTop(myButton1, position + positionTop);
+                                        if (left > CanvasMain.ActualWidth - 100)
+                                        {
+                                            left = 260;
+                                            positionTop += 60;
+
+                                        }
+                                        Canvas.SetLeft(myButton1, left);
+                                    }
+                                }
+                                break;
+                            case 2:
+                                myButton.Tag = "AccessPointCluster";
+                                myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                double left1 = 200;
+                                double positionTop1 = -100;
+                                Line line2 = new Line();
+                                line2.Stroke = Brushes.LightSteelBlue;
+                                line2.StrokeThickness = 2;
+                                line2.X1 = 215;
+                                line2.Y1 = position - 45;
+                                line2.X2 = 265;
+                                line2.Y2 = (position + positionTop1) + 36;
+                                CanvasMain.Children.Add(line2);
+                                foreach (DeviceDetails dd in p.lanDeviceDetails)
+                                {
+                                    if (dd.Type.ToString().Equals("AccessPoint"))
+                                    {
+                                        left1 += 60;
+                                        Button myButton1 = new Button
+                                        {
+                                            Width = 70,
+                                            Height = 66,
+                                            Background = Brushes.Transparent,
+                                            BorderBrush = Brushes.Transparent,
+                                            Content = new Image
+                                            {
+                                                Source = new BitmapImage(new Uri(@"Images/GUI_AccessPoint.png", UriKind.Relative)),
+                                                VerticalAlignment = VerticalAlignment.Center,
+                                                Stretch = Stretch.Fill
+                                            }
+                                        };
+                                        myButton1.Tag = dd.IpAddress;
+                                        myButton1.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                        CanvasMain.Children.Add(myButton1);
+                                        Canvas.SetTop(myButton1, position + positionTop1);
+                                        if (left1 > CanvasMain.ActualWidth - 100)
+                                        {
+                                            left1 = 260;
+                                            positionTop1 += 60;
+
+                                        }
+                                        Canvas.SetLeft(myButton1, left1);
+                                    }
+                                }
+                                break;
+                            case 3:
+                                myButton.Tag = "ServerCluster";
+                                myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                double left2 = 200;
+                                double positionTop3 = -120;
+                                Line line3 = new Line();
+                                line3.Stroke = Brushes.LightSteelBlue;
+                                line3.StrokeThickness = 2;
+                                line3.X1 = 215;
+                                line3.Y1 = position - 45;
+                                line3.X2 = 265;
+                                line3.Y2 = (position + positionTop3) + 36;
+                                CanvasMain.Children.Add(line3);
+                                foreach (DeviceDetails dd in p.lanDeviceDetails)
+                                {
+                                    if (dd.Type.ToString().Equals("Server"))
+                                    {
+                                        left2 += 60;
+                                        Button myButton1 = new Button
+                                        {
+                                            Width = 70,
+                                            Height = 66,
+                                            Background = Brushes.Transparent,
+                                            BorderBrush = Brushes.Transparent,
+                                            Content = new Image
+                                            {
+                                                Source = new BitmapImage(new Uri(@"Images/GUI_PC.png", UriKind.Relative)),
+                                                VerticalAlignment = VerticalAlignment.Center,
+                                                Stretch = Stretch.Fill
+                                            }
+                                        };
+                                        myButton1.Tag = dd.IpAddress;
+                                        myButton1.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                        CanvasMain.Children.Add(myButton1);
+                                        Canvas.SetTop(myButton1, position + positionTop3);
+                                        if (left2 > CanvasMain.ActualWidth - 100)
+                                        {
+                                            left2 = 260;
+                                            positionTop3 += 60;
+
+                                        }
+                                        Canvas.SetLeft(myButton1, left2);
+                                    }
+                                }
+                                break;
+                            case 4:
+                                myButton.Tag = "PrinterCluster";
+                                myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                double left4 = 200;
+                                double positionTop4 = -120;
+                                Line line4 = new Line();
+                                line4.Stroke = Brushes.LightSteelBlue;
+                                line4.StrokeThickness = 2;
+                                line4.X1 = 215;
+                                line4.Y1 = position - 45;
+                                line4.X2 = 265;
+                                line4.Y2 = (position + positionTop4) + 36;
+                                CanvasMain.Children.Add(line4);
+                                foreach (DeviceDetails dd in p.lanDeviceDetails)
+                                {
+                                    if (dd.Type.ToString().Equals("Printer"))
+                                    {
+                                        left4 += 60;
+                                        Button myButton1 = new Button
+                                        {
+                                            Width = 70,
+                                            Height = 66,
+                                            Background = Brushes.Transparent,
+                                            BorderBrush = Brushes.Transparent,
+                                            Content = new Image
+                                            {
+                                                Source = new BitmapImage(new Uri(@"Images/GUI_PC.png", UriKind.Relative)),
+                                                VerticalAlignment = VerticalAlignment.Center,
+                                                Stretch = Stretch.Fill
+                                            }
+                                        };
+                                        myButton1.Tag = dd.IpAddress;
+                                        myButton1.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                        CanvasMain.Children.Add(myButton1);
+                                        Canvas.SetTop(myButton1, position + positionTop4);
+                                        if (left4 > CanvasMain.ActualWidth - 100)
+                                        {
+                                            left4 = 260;
+                                            positionTop4 += 60;
+
+                                        }
+                                        Canvas.SetLeft(myButton1, left4);
+                                    }
+                                }
+                                break;
+                            case 5:
+                                myButton.Tag = "SmartphoneCluster";
+                                myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                double left5 = 200;
+                                double positionTop5 = -120;
+                                Line line5 = new Line();
+                                line5.Stroke = Brushes.LightSteelBlue;
+                                line5.StrokeThickness = 2;
+                                line5.X1 = 215;
+                                line5.Y1 = position - 45;
+                                line5.X2 = 265;
+                                line5.Y2 = (position + positionTop5) + 36;
+                                CanvasMain.Children.Add(line5);
+                                foreach (DeviceDetails dd in p.lanDeviceDetails)
+                                {
+                                    if (dd.Type.ToString().Equals("Smartphone"))
+                                    {
+                                        left5 += 60;
+                                        Button myButton1 = new Button
+                                        {
+                                            Width = 70,
+                                            Height = 66,
+                                            Background = Brushes.Transparent,
+                                            BorderBrush = Brushes.Transparent,
+                                            Content = new Image
+                                            {
+                                                Source = new BitmapImage(new Uri(@"Images/GUI_Mobile.png", UriKind.Relative)),
+                                                VerticalAlignment = VerticalAlignment.Center,
+                                                Stretch = Stretch.Fill
+                                            }
+                                        };
+                                        myButton1.Tag = dd.IpAddress;
+                                        myButton1.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                        CanvasMain.Children.Add(myButton1);
+                                        Canvas.SetTop(myButton1, position + positionTop5);
+                                        if (left5 > CanvasMain.ActualWidth - 100)
+                                        {
+                                            left4 = 260;
+                                            positionTop5 += 60;
+
+                                        }
+                                        Canvas.SetLeft(myButton1, left5);
+                                    }
+                                }
+                                break;
+                            case 6:
+                                myButton.Tag = "UndefinedCluster";
+                                myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                break;
+                            default:
+                                myButton.Tag = "DefaultCluster";
+                                myButton.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                                break;
+                        }
+                        position += increase;
+                    }
+                }
 
             }
             catch (IOException ex)
             {
                 Debug.WriteLine("\n-----<IOException>-----\nClass: MainWindow\nLoadDeviceMap\n" + ex.Message + "\n");
             }
+
+
         }
+        /*     private void drawMap(int i, double x, double y, int length, string devName, double angle, double line1, double line2)
+             {
+                 int halfWay = length / 2;
+                 double radius = 40 * (length) / 1.2;
+                 Button myButton2 = new Button
+                 {
+                     Width = 70,
+                     Height = 66,
+                     Background = Brushes.Transparent,
+                     BorderBrush = Brushes.Transparent,
+                     Content = new Image
+                     {
+                         Source = new BitmapImage(new Uri(@"Images/GUI_PC.png", UriKind.Relative)),
+                         VerticalAlignment = VerticalAlignment.Center,
+                         Stretch = Stretch.Fill
+                     }
+                 };
+                 myButton2.Tag = devName;
+                 myButton2.Click += new RoutedEventHandler(MakeButtonClickHandler());
+                 if ((i + 1) > halfWay)
+                 {
+                     actualAngleT -= angle;
+                     y += Math.Sin(actualAngleT) * (radius * 1.4);
+                     x += Math.Cos(actualAngleT) * (radius * 1.6);
+                     Canvas.SetLeft(myButton2, x);  // X
+                     Canvas.SetTop(myButton2, y);   // Y
+                     //    MessageBox.Show(i+ " i "+ x + " ! " + y + " ");
+                 }
+                 else
+                 {
+                     actualAngle2T -= angle;
+                     y += Math.Sin(actualAngle2T) * (radius * 1.4);
+                     x += Math.Cos(actualAngle2T) * (radius * 1.6);
+                     Canvas.SetLeft(myButton2, x);  // X
+                     Canvas.SetTop(myButton2, y);   // Y
+                     //   MessageBox.Show(x + " " + y + " ");
+                 }
+
+
+                 // Draw a line
+                 Line line = new Line();
+                 line.Stroke = Brushes.LightSteelBlue;
+
+                 line.StrokeThickness = 2;
+                 line.X1 = line1;
+                 line.Y1 = line2;
+                 line.X2 = x + 8;
+                 line.Y2 = y + 28;
+
+                 CanvasMain.Children.Add(line);
+                 CanvasMain.Children.Add(myButton2);
+             }*/
         private void Start_StopButton_Click(object sender, RoutedEventArgs e)
         {
             StartMonitoring();
@@ -962,27 +1368,58 @@ namespace Project_v1._0._2
                 long latency = 0;
                 string OS = "Unknown";
                 string description = "";
-                foreach (DeviceDetails dd in p.lanDeviceDetails)
+                if (b.Tag.ToString().Equals("PCCluster"))
                 {
-                    if (dd.IpAddress.ToString() == b.Tag.ToString())
-                    {
-                        mac = dd.MacAddress;
-                        latency = dd.Latency;
-                        OS = dd.Os;
-                        description = dd.Description;
-                        /*  ToolTip tt = new ToolTip();
-                        tt.Content = "Offline!";
-                        b.ToolTip = tt;*/
-                        //b.Background = Brushes.Red;
-                        break;
-                    }
-                    else
-                    {
-                        mac = "Not found";
-                        // latency = "Unknown";
-                    }
+                    MessageBox.Show("PC Cluster\nDevices found: " + tempArray[1], "PC's");
                 }
-                MessageBox.Show("IP Address: " + b.Tag + "\nMac Address: " + mac + "\nLatency: " + latency + "ms" + "\nOS: " + OS + "\n" + description, b.Tag + " Details");
+                else if (b.Tag.ToString().Equals("AccessPointCluster"))
+                {
+                    MessageBox.Show("Access Point Cluster\nDevices found: " + tempArray[2], "AP's");
+                }
+                else if (b.Tag.ToString().Equals("ServerCluster"))
+                {
+                    MessageBox.Show("Server Cluster\nDevices found: " + tempArray[3], "Servers");
+                }
+                else if (b.Tag.ToString().Equals("PrinterCluster"))
+                {
+                    MessageBox.Show("Printer Cluster\nDevices found: " + tempArray[4], "Printers");
+                }
+                else if (b.Tag.ToString().Equals("SmartphoneCluster"))
+                {
+                    MessageBox.Show("Mobile Cluster\nDevices found: " + tempArray[5], "Mobile");
+                }
+                else if (b.Tag.ToString().Equals("UndefinedCluster"))
+                {
+                    MessageBox.Show("Undefined Cluster\nDevices found: " + tempArray[6], "Undefined");
+                }
+                else if (b.Tag.ToString().Equals("DefaultdCluster"))
+                {
+                    MessageBox.Show("Default Cluster\nDevices found: " + tempArray[7], "Default");
+                }
+                else
+                {
+                    foreach (DeviceDetails dd in p.lanDeviceDetails)
+                    {
+                        if (dd.IpAddress.ToString() == b.Tag.ToString())
+                        {
+                            mac = dd.MacAddress;
+                            latency = dd.Latency;
+                            OS = dd.Os;
+                            description = dd.Description;
+                            /*  ToolTip tt = new ToolTip();
+                            tt.Content = "Offline!";
+                            b.ToolTip = tt;*/
+                            //b.Background = Brushes.Red;
+                            break;
+                        }
+                        else
+                        {
+                            mac = "Not found";
+                            // latency = "Unknown";
+                        }
+                    }
+                    MessageBox.Show("IP Address: " + b.Tag + "\nMac Address: " + mac + "\nLatency: " + latency + "ms" + "\nOS: " + OS + "\n" + description, b.Tag + " Details");
+                }
             };
 
         }
@@ -1004,7 +1441,7 @@ namespace Project_v1._0._2
         }
         public void RunGridAnimation()
         {
-            //  grdEmployee.BorderBrush.
+            //  grdIpAddresses.BorderBrush.
         }
         private void FillDataGrid() //Create database connection
         {
@@ -1017,7 +1454,7 @@ namespace Project_v1._0._2
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable("Movies");
                 sda.Fill(dt);
-                grdEmployee.ItemsSource = dt.DefaultView;
+                grdIpAddresses.ItemsSource = dt.DefaultView;
             }
         }
         // Respond to the right mouse button down event by setting up a hit test results callback. 
@@ -1060,7 +1497,7 @@ namespace Project_v1._0._2
                     //lbFiles.Items.Add(Path.GetFileName(filename));
                     //       MessageBox.Show("Path" + Path.GetFileName(filename));
                     // MessageBox.Show("Path" + Path.GetFullPath(filename));
-                    string path = Path.GetFullPath(filename).ToString();
+                    string path = System.IO.Path.GetFullPath(filename).ToString();
                     // MessageBox.Show("File opened from: " + t, "Opened", MessageBoxButton.OK, MessageBoxImage.Information);
                     networkInfoFile = "NetworkInfo.csv";        // Create this file in local directory
                     fileNameXML = path;
@@ -1085,14 +1522,29 @@ namespace Project_v1._0._2
             {
                 foreach (string filename in saveFile.FileNames)
                 {
-                    MessageBox.Show("File saved in: " + Path.GetFullPath(filename), "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("File saved in: " + System.IO.Path.GetFullPath(filename), "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
                     Pingers p = new Pingers();
                     MyXML.GetObject(ref p.lanDeviceDetails, fileNameXML);
-                    MyXML.SaveObject(p.lanDeviceDetails, Path.GetFullPath(filename));
+                    MyXML.SaveObject(p.lanDeviceDetails, System.IO.Path.GetFullPath(filename));
                 }
             }
 
             e.Handled = true;
+        }
+
+        private void Export(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFile = new SaveFileDialog();
+            saveFile.Filter = "Text files (*.csv)|*.csv";
+            saveFile.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            if (saveFile.ShowDialog() == true)
+            {
+                foreach (string filename in saveFile.FileNames)
+                {
+                    MessageBox.Show("File saved in: " + System.IO.Path.GetFullPath(filename), "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
+                    File.Copy(networkInfoFile, System.IO.Path.GetFullPath(filename));
+                }
+            }
         }
         #endregion
 
@@ -1250,6 +1702,7 @@ namespace Project_v1._0._2
                 {
                     Service service = new Service();
                     Task result = service.LoginUser(tbLogin.Text, bPassword.Password);      // Pass login and password to the website
+
                     blobUsername = parseUsername(tbLogin.Text);
                     if (service.getSuccess())
                     {
@@ -1496,7 +1949,7 @@ namespace Project_v1._0._2
             {
                 foreach (string filename in openFileDialog.FileNames)
                 {
-                    path = Path.GetFullPath(filename).ToString();
+                    path = System.IO.Path.GetFullPath(filename).ToString();
                     break;
                 }
             }

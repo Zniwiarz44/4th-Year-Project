@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfDeviceDetails xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DeviceDetails>
+    <Os>Windows</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>192.168.1.6</IpAddress>
+    <Type>PC</Type>
+    <MacAddress>54:be:f7:88:1a:4a</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Windows</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>192.168.1.2</IpAddress>
+    <Type>PC</Type>
+    <MacAddress>80:56:f2:2e:15:1f</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Linux</Os>
+    <IsSNMPEnabled>true</IsSNMPEnabled>
+    <HostName>Default Gateway</HostName>
+    <IpAddress>192.168.1.254</IpAddress>
+    <Type>Router</Type>
+    <MacAddress>cc:5d:4e:dc:c1:80</MacAddress>
+    <Latency>18</Latency>
+    <Description>Description:
+sysObjectID: 1.3.6.1.4.1.8072.3.2.10
+sysUpTime: 6d 18h 5m 8s 40ms
+sysContact: trendchip
+sysName: ZyXEL</Description>
+  </DeviceDetails>
+</ArrayOfDeviceDetails>

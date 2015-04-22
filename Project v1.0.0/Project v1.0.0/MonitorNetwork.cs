@@ -49,66 +49,71 @@ namespace MonitorNetwork_
             lock (@lock)
             {
                 instances -= 1;
-                completed++;
-            }
-            if (networkMonitorList.FindIndex(dev => dev.Name.Equals(e.Reply.Address.ToString())) == -1) //Avoid duplicates
-            {
-
-                if (e.Reply.Status == IPStatus.Success)
+                
+                if (networkMonitorList.FindIndex(dev => dev.Name.Equals(e.Reply.Address.ToString())) == -1) //Avoid duplicates
                 {
-                    /*This is possibly wrong, the array should be private and be accessed in NetworkStatus class, here using Add...() method*/
-                    // NetworkStatus ns = new NetworkStatus(e.Reply.Address.ToString(), true);     //Device is responding
-                    // monitorStatus.Add(ns);
-                     long lat = e.Reply.RoundtripTime;
-                     Pingers p = new Pingers();
-                     MyXML.GetObject(ref p.lanDeviceDetails, filename);    ///-----<READ FILE>------
-                     foreach (DeviceDetails dd in p.lanDeviceDetails)
-                     {
-                         if(dd.IpAddress.Equals(e.Reply.Address.ToString()))
-                         {
-                             dd.Latency = lat;
-                             lock (@lockSaving)
-                             {
-                                 MyXML.SaveObject(p.lanDeviceDetails, filename);
-                             }                          
-                             break;
-                         }
-                     }
-                    NetworkStatus ns = new NetworkStatus(e.Reply.Address.ToString(), "Online");
-                    networkMonitorList.Add(ns);
-                }
-                else
-                {
-                    long lat = -1;
-                    Pingers p = new Pingers();
-                    MyXML.GetObject(ref p.lanDeviceDetails, filename);    ///-----<READ FILE>------
-                    foreach (DeviceDetails dd in p.lanDeviceDetails)
+                    if (e.Reply.Status == IPStatus.Success)
                     {
-                        if (dd.IpAddress.Equals(tempIpAddress))
+                        /*This is possibly wrong, the array should be private and be accessed in NetworkStatus class, here using Add...() method*/
+                        // NetworkStatus ns = new NetworkStatus(e.Reply.Address.ToString(), true);     //Device is responding
+                        // monitorStatus.Add(ns);
+                        long lat = e.Reply.RoundtripTime;
+                        Pingers p = new Pingers();
+                        Debug.WriteLine("Class: MonitorNetwork Ping_completed\nGetObject");
+                        MyXML.GetObject(ref p.lanDeviceDetails, filename);    ///-----<READ FILE>------
+                        foreach (DeviceDetails dd in p.lanDeviceDetails)
                         {
-                            dd.Latency = lat;
-                            lock (@lockSaving)
+                            if (dd.IpAddress.Equals(e.Reply.Address.ToString()))
                             {
-                                MyXML.SaveObject(p.lanDeviceDetails, filename);     // Update the latency in the file
+                                dd.Latency = lat;
+                                lock (@lockSaving)
+                                {
+                                    Debug.WriteLine("Class: MonitorNetwork Ping_completed\nSaveObject");
+                                    MyXML.SaveObject(p.lanDeviceDetails, filename);
+                                }
+                                break;
                             }
-                            break;
                         }
+                        NetworkStatus ns = new NetworkStatus(e.Reply.Address.ToString(), "Online");
+                        networkMonitorList.Add(ns);
                     }
-                    //  NetworkStatus ns = new NetworkStatus(e.Reply.Address.ToString(), false);    //Device is not responding
-                    // monitorStatus.Add(ns);
-                    //    nc.AddNetworkStatus(e.Reply.Address.ToString(), false);
-                    NetworkStatus ns = new NetworkStatus(tempIpAddress, "Offline");
-                    networkMonitorList.Add(ns);
+                    else
+                    {
+                        long lat = -1;
+                        Pingers p = new Pingers();
+                        Debug.WriteLine("Class: MonitorNetwork Ping_completed else\nGetObject");
+                        MyXML.GetObject(ref p.lanDeviceDetails, filename);    ///-----<READ FILE>------
+                        
+                        foreach (DeviceDetails dd in p.lanDeviceDetails)
+                        {
+                            if (dd.IpAddress.Equals(tempIpAddress))
+                            {
+                                dd.Latency = lat;
+                                lock (@lockSaving)
+                                {
+                                    Debug.WriteLine("Class: MonitorNetwork Ping_completed else\nSaveObject");
+                                    MyXML.SaveObject(p.lanDeviceDetails, filename);     // Update the latency in the file
+                                }
+                                break;
+                            }
+                        }
+                        //  NetworkStatus ns = new NetworkStatus(e.Reply.Address.ToString(), false);    //Device is not responding
+                        // monitorStatus.Add(ns);
+                        //    nc.AddNetworkStatus(e.Reply.Address.ToString(), false);
+                        NetworkStatus ns = new NetworkStatus(tempIpAddress, "Offline");
+                        networkMonitorList.Add(ns);
+                    }
                 }
             }
+            completed++;
         }
         public void RunPingers(List<string> monitorArray, string file)
         {
             // nc.RemoveNetworkStatus();
-          //  string t = baseIP;
+            //  string t = baseIP;
             filename = file;
             int cnt = monitorArray.Count;
-            if(cnt > 0)                             // Catch null exception
+            if (cnt > 0)                             // Catch null exception
             {
                 CreatePingers(cnt);
 
@@ -124,9 +129,17 @@ namespace MonitorNetwork_
                     {
                         instances += 1;
                     }
-                    tempIpAddress = (monitorArray[index]);     //set ip for temp in case reply fails (if it fails ip = 0.0.0.0)
-                    p.SendAsync((monitorArray[index]), timeOut, data, po);
-                    index++;
+                    try
+                    {
+                        // ERROR HERE, temp will not work, send > wait for reply > send another one thats the only way
+                        tempIpAddress = (monitorArray[index]);     //set ip for temp in case reply fails (if it fails ip = 0.0.0.0)
+                        p.SendAsync((monitorArray[index]), timeOut, data, po);
+                        index++;
+                    }catch(ArgumentException ex)
+                    {
+                        Debug.WriteLine("\n-----<ArgumentException>-----\nClass: MonitorNetwork\nRunPingers()\n" + ex.Message + "\n");
+                    }
+      
                 }
             }
         }

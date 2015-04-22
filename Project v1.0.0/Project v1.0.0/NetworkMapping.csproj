@@ -133,12 +133,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Interop.cs" />
     <Compile Include="NetworkInfo.cs" />
     <Compile Include="PacketWrapper.cs" />
     <Compile Include="RegisterBindingModel.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="TCPHeader.cs" />
     <Compile Include="UDPHeader.cs" />
+    <Compile Include="WlanApi.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -258,6 +260,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\GUI_Router_Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\GUI_Mobile.png" />
+    <Resource Include="Images\GUI_Mobile_Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\GUI_AccessPoint.png" />
+    <Resource Include="Images\GUI_AccessPoint_Warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

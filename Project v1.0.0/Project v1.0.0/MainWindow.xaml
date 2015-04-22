@@ -28,7 +28,7 @@
         <Label x:Name="LabelList" Content="List of devices" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Height="26" Width="100" Foreground="#FF4EAC9B"/>
 
         <Label x:Name="NetworkName" Content="Default" HorizontalAlignment="Right" Margin="541,16,0,0" VerticalAlignment="Top" Width="141" Foreground="#FF4EAC9B" Background="{x:Null}"/>
-        <Canvas x:Name="CanvasMain" Margin="10,74,194,161" DockPanel.Dock="Right"/>
+        <Canvas x:Name="CanvasMain" Margin="10,74,194,166"/>
         <Grid x:Name="GridWindow" Margin="10,74,194,166" Visibility="Hidden">
             <Grid.Background>
                 <RadialGradientBrush>
@@ -72,7 +72,7 @@
             </d3:ChartPlotter>
         </Grid>
 
-        <DataGrid x:Name="grdEmployee" Canvas.Right="5" Canvas.Top="10" Height="265" Width="167" Opacity="0.85" Margin="0,74,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+        <DataGrid x:Name="grdIpAddresses" Canvas.Right="5" Canvas.Top="10" Height="265" Width="167" Opacity="0.85" Margin="0,74,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
             <DataGrid.Background>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                     <GradientStop Color="#FF464646" Offset="1"/>
@@ -122,7 +122,12 @@
                 <MenuItem Header="_Open Cloud"  IsEnabled="False" Click="OpenCloud" x:Name="openCloud"/>
                 <MenuItem Header="_Exit" Click="Exit"/>
             </MenuItem>
-            <MenuItem Header="_Edit" />
+            <MenuItem Header="_Edit">
+                <MenuItem Header="Performance">
+                    <MenuItem Header="Export .csv" IsEnabled="True" Click="Export" x:Name="ExportMenuItem"/>
+                </MenuItem>
+            </MenuItem>
+   
             <MenuItem Header="Settings">
                 <MenuItem Header="Monitoring">
                     <MenuItem Header="Monitoring frequency">
@@ -192,7 +197,7 @@
             <d3:VerticalAxisTitle FontFamily="Segoe UI" Content="Ping" FontSize="12"/>
             <d3:HorizontalAxisTitle FontFamily="Segoe UI" Content="Time" FontSize="12"/>
         </d3:ChartPlotter>
-        <Label x:Name="NetworkPerformance_Label_Copy" Content="Broadcast listiner" HorizontalAlignment="Left" Height="28" Margin="735,0,0,128" VerticalAlignment="Bottom" Width="198" Foreground="#FF5F9EA0"/>
+        <Label x:Name="NetworkPerformance_Label_Copy" Content="Broadcast listiner" HorizontalAlignment="Right" Height="28" Margin="0,0,83,128" VerticalAlignment="Bottom" Width="198" Foreground="#FF5F9EA0"/>
         <Rectangle HorizontalAlignment="Left" Margin="91,0,0,53" Stroke="Black" Width="35" Height="16" VerticalAlignment="Bottom">
             <Rectangle.Fill>
                 <RadialGradientBrush>

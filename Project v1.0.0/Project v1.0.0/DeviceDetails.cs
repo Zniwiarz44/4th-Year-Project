@@ -9,7 +9,7 @@ namespace LanDevices
 {
     public enum deviceType
     {
-        PC, Laptop, Router, Server, Smartphone, Printer, Undefined
+        PC, Laptop, Router, Server, Smartphone, Printer, AccessPoint, Undefined
     }
     public class DeviceDetails
     {
@@ -146,6 +146,10 @@ namespace LanDevices
             {
                 Debug.WriteLine("\n-----<ArgumentNullException>-----\nClass: DeviceDetails-MyXML\nSaveObject()\n" + ex.Message + "\n");
                 return false;
+            }catch(InvalidOperationException ex)
+            {
+                Debug.WriteLine("\n-----<InvalidOperationException>-----\nClass: DeviceDetails-MyXML\nSaveObject()\n" + ex.Message + "\n");
+                return false;
             }
         }
 
@@ -169,6 +173,11 @@ namespace LanDevices
             catch(ArgumentNullException ex)
             {
                 Debug.WriteLine("\n-----<ArgumentNullException>-----\nClass: DeviceDetails-MyXML\nGetObject()\n" + ex.Message + "\n");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Debug.WriteLine("\n-----<InvalidOperationException>-----\nClass: DeviceDetails-MyXML\nSaveObject()\n" + ex.Message + "\n");
+                return false;
             }
             return false;
         }

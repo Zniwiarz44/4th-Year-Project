@@ -72,21 +72,24 @@ namespace Pingers_
                     //ENABLE THIS IF U WANT TO CONTINUE WITH HOST NAMES
                     long lat = e.Reply.RoundtripTime;
                     int ttl = e.Reply.Options.Ttl;
-
+                    deviceType tempType = deviceType.PC;
                     Debug.WriteLine("\n-----<TTL>-----\nTTL: " + e.Reply.Options.Ttl);
                     switch (ttl)                // Really basic finger printing method of checking for device type, this can be improved with frame size but now with this class, Socket will do
                     {
                         case 64:
                             os = "Linux";
+                            tempType = deviceType.Smartphone;
                             break;
                         case 128:
                             os = "Windows";
+                            tempType = deviceType.PC;
                             break;
                         case 255:
                             os = "Cisco";
                             break;
                         default:
                             os = "Unknown";
+                            tempType = deviceType.PC;
                             break;
                     }
                     if ((e.Reply.Address.ToString() == defaultGateway) && (!gatewayFound))
@@ -98,7 +101,7 @@ namespace Pingers_
                     }
                     else
                     {
-                        DeviceDetails dd = new DeviceDetails(e.Reply.Address.ToString(), "Unknown", deviceType.PC, GetMacAddress(e.Reply.Address.ToString()), lat, os, "", false);
+                        DeviceDetails dd = new DeviceDetails(e.Reply.Address.ToString(), "Unknown", tempType, GetMacAddress(e.Reply.Address.ToString()), lat, os, "", false);
                         dd.Latency = lat;
                         lanDeviceDetails.Add(dd);
                     }
@@ -125,6 +128,7 @@ namespace Pingers_
             {
                 //Console.WriteLine(String.Concat("Non-active IP: ", e.Reply.Address.ToString()));
             }
+         
         }
         public void RunPingers(string baseIP, string file)
         {
