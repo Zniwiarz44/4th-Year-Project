@@ -1,0 +1,253 @@
+﻿<Window x:Class="Project_v1._0._2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
+        Title="Network Mapping" Height="720" Width="1024" WindowStartupLocation="CenterScreen" Visibility="Visible" Foreground="White" Icon="Images/NetworkMappingIcon.png">
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" 
+        CanExecute="OpenCanExecute"
+        Executed="OpenExecuted" />
+        <CommandBinding Command="Save" 
+        CanExecute="SaveCanExecute"
+        Executed="SaveExecuted" />
+    </Window.CommandBindings>
+    <Window.Background>
+        <ImageBrush ImageSource="Images/Background_Layer3.png" Stretch="UniformToFill" />
+    </Window.Background>
+    <Grid Margin="0,0,0,-1">
+        <Label x:Name="LoggedIn" Content="You are not logged in" Canvas.Left="667" Canvas.Top="10" Width="146"  Foreground="#FF4EAC9B" Height="30" Margin="0,29,194,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Button x:Name="ScanButton" Content="Scan" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="76" Click="Button_Click" BorderBrush="{x:Null}" >
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="#FF37EDF5" Offset="0.554"/>
+                    <GradientStop Color="Black"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Label x:Name="LabelList" Content="List of devices" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Height="26" Width="100" Foreground="#FF4EAC9B"/>
+
+        <Label x:Name="NetworkName" Content="Default" HorizontalAlignment="Right" Margin="541,16,0,0" VerticalAlignment="Top" Width="141" Foreground="#FF4EAC9B" Background="{x:Null}"/>
+        <Canvas x:Name="CanvasMain" Margin="10,74,194,166"/>
+        <Grid x:Name="GridWindow" Margin="10,74,194,166" Visibility="Hidden">
+            <Grid.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FF0F0F0F" Offset="1"/>
+                    <GradientStop Color="#4C303030"/>
+                </RadialGradientBrush>
+            </Grid.Background>
+            <Grid Margin="10,10,0,10" HorizontalAlignment="Left" Width="130">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#00131313" Offset="0.177"/>
+                        <GradientStop Color="#001B1B1B" Offset="0.735"/>
+                        <GradientStop Color="#7F000000" Offset="0.201"/>
+                        <GradientStop Color="#7F3C3C3C" Offset="0.723"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Button Click="LoadPerformance" Content="Load Performance" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="110" Background="{x:Null}" Foreground="#FF4EAC9B"/>
+                <Label Content="Details" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" Width="110" Foreground="#FF4BD3BA"/>
+                <Grid Margin="0,84,0,235" Background="#FF2E2E2E">
+                    <Label Content="Network 1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="110" Foreground="#FF4BD3BA"/>
+                    <Label x:Name="Net1Avgd" Content="Average daley: " HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="110" Foreground="#FF4BD3BA">
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                <GradientStop Color="#00000000" Offset="1"/>
+                                <GradientStop Color="#FF0DA40D" Offset="0.9"/>
+                                <GradientStop Color="#00000000" Offset="0.8"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <Label x:Name="Net1NoDev" Content="No. devices: " HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="110" Foreground="#FF4BD3BA">
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#00000000" Offset="1"/>
+                                <GradientStop Color="#FF2445B8" Offset="0.9"/>
+                                <GradientStop Color="#00000000" Offset="0.8"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                </Grid>
+                <Grid Margin="0,200,0,119" Background="#FF2E2E2E">
+                    <Label Content="Network 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="110" Foreground="#FF4BD3BA"/>
+                    <Label x:Name="Net2Avgd" Content="Average daley: " HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="110" Foreground="#FF4BD3BA">
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#00000000" Offset="1"/>
+                                <GradientStop Color="#FFE06F20" Offset="0.9"/>
+                                <GradientStop Color="#00000000" Offset="0.8"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <Label x:Name="Net2NoDev" Content="No. devices: " HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="110" Foreground="#FF4BD3BA">
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#00000000" Offset="1"/>
+                                <GradientStop Color="#FFCD2020" Offset="0.9"/>
+                                <GradientStop Color="#00000000" Offset="0.8"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                </Grid>
+            </Grid>
+            <d3:ChartPlotter x:Name="plotterCompare" BorderBrush="Black" Foreground="#FF30A882" Margin="145,10,10,10" Background="{x:Null}">
+                <d3:ChartPlotter.HorizontalAxis>
+                    <d3:HorizontalTimeSpanAxis x:Name="timeAxis1"/>
+                </d3:ChartPlotter.HorizontalAxis>
+                <d3:ChartPlotter.VerticalAxis>
+                    <d3:VerticalIntegerAxis x:Name="pingAxis1"/>
+                </d3:ChartPlotter.VerticalAxis>
+
+                <d3:Header FontFamily="Segoe UI" Content="Network Latency" FontSize="12"/>
+                <d3:VerticalAxisTitle FontFamily="Segoe UI" Content="Ping" FontSize="12"/>
+                <d3:HorizontalAxisTitle FontFamily="Segoe UI" Content="Time" FontSize="12"/>
+            </d3:ChartPlotter>
+        </Grid>
+
+        <DataGrid x:Name="grdIpAddresses" Canvas.Right="5" Canvas.Top="10" Height="265" Width="167" Opacity="0.85" Margin="0,74,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <DataGrid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF464646" Offset="1"/>
+                    <GradientStop x:Name="GradientStop" Color="#FF01B886" Offset="0.1"/>
+                    <GradientStop Color="#FF464646"/>
+                </LinearGradientBrush>
+            </DataGrid.Background>
+            <DataGrid.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="GradientStop" Storyboard.TargetProperty="Offset" From="0.1" To="1.0" Duration="0:0:2.5" AutoReverse="True" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </DataGrid.Triggers>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Width="80" Header="IP Address"/>
+                <DataGridTextColumn Binding="{Binding State}" Width="79" Header="State"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <Label x:Name="MyIpAddress" Content="none" HorizontalAlignment="Right" Margin="541,47,0,0" VerticalAlignment="Top" Width="141" Foreground="#FF4EAC9B"/>
+
+        <Button x:Name="Start_StopButton" Content="Play" Height="26" VerticalAlignment="Top" Margin="411,43,0,0" Background="{x:Null}" Foreground="#FF4EAC9B" HorizontalAlignment="Left" Click="Start_StopButton_Click" Width="53">
+            <Button.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF161616" Offset="0.49"/>
+                    <GradientStop Color="#FF1E8287" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.BorderBrush>
+        </Button>
+        <Label x:Name="ScanProgress" Content="Ready to Scan" HorizontalAlignment="Left" Margin="91,10,0,0" VerticalAlignment="Top" Width="117" Foreground="#FF4EAC9B"/>
+        <Menu x:Name="Navigation" HorizontalAlignment="Left" Height="20" Margin="213,10,0,0" VerticalAlignment="Top" Width="289">
+            <Menu.Background>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF84C4CB" Offset="0.502"/>
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="#FF0E0E0E"/>
+                </LinearGradientBrush>
+            </Menu.Background>
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" IsEnabled="True" Click="StartNewScan"  x:Name="newScan"/>
+                <MenuItem Header="_Save" Command="Save"/>
+                <MenuItem Header="_Save Cloud" IsEnabled="False" Click="SaveCloud" x:Name="saveCloud"/>
+                <MenuItem Header="_Open" Command="Open" />
+                <MenuItem Header="_Open Cloud"  IsEnabled="False" Click="OpenCloud" x:Name="openCloud"/>
+                <MenuItem Header="_Exit" Click="Exit"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="Performance">
+                    <MenuItem Header="Export .csv" IsEnabled="True" Click="Export" x:Name="ExportMenuItem"/>
+                </MenuItem>
+            </MenuItem>
+   
+            <MenuItem Header="Settings">
+                <MenuItem Header="Monitoring">
+                    <MenuItem Header="Monitoring frequency">
+                        <RadioButton Content="Update every 20 sec" IsChecked="True" Click="Set20sec"/>
+                        <RadioButton Content="Update every 60 sec" Click="Set60sec"/>
+                        <RadioButton Content="Update every 5 min"  Click="Set5min"/>
+                        <RadioButton Content="Update every 30 min" Click="Set30min"/>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Scanning">
+                    <CheckBox Content="Enable SNMP" IsChecked="False" Click="EnableSNMP" x:Name="checkEnableSNMP"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Window">
+                <MenuItem Header="Compare networks" Click="CompareNetworks"/>
+            </MenuItem>
+            <MenuItem Header="_Help" />
+        </Menu>
+        <Label x:Name="LabelMonitor" Content="Monitoring paused" HorizontalAlignment="Left" Margin="213,43,0,0" VerticalAlignment="Top" Height="26" Width="180" Foreground="#FF4EAC9B"/>
+        <Label x:Name="NetworkPerformance_Label" Content="-----Network Performance-----" HorizontalAlignment="Left" Height="28" Margin="10,0,0,133" VerticalAlignment="Bottom" Width="198" Foreground="#FF5F9EA0"/>
+        <Label x:Name="AvgDaley" Content="Average daley:" HorizontalAlignment="Left" Margin="10,0,0,102" Width="198" Foreground="#FF4EAC9B" Height="28" VerticalAlignment="Bottom"/>
+        <Label x:Name="NoDevices" Content="No. devices:" HorizontalAlignment="Left" Margin="10,0,0,74" Width="198" Foreground="#FF4EAC9B" Height="28" VerticalAlignment="Bottom"/>
+        <DataGrid x:Name="trafficList" Margin="0,0,10,10" Background="#FF3C8073" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Width="271" Height="118" VerticalAlignment="Bottom">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Source}" Width="100" Header="IP Source"/>
+                <DataGridTextColumn Binding="{Binding Destination}" Width="100" Header="IP Destination"/>
+                <DataGridTextColumn Binding="{Binding Port}" Width="65" Header="Port"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid HorizontalAlignment="Right" Height="230" Margin="0,10,194,0" VerticalAlignment="Top" Width="146">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Border x:Name="BorderAnim" Height="12" VerticalAlignment="Top" MouseEnter="StackPanel_MouseEnter" MouseLeave="StackPanel_MouseLeave" BorderBrush="#FF1F4A5F" BorderThickness="1">
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF1D4640" Offset="0"/>
+                        <GradientStop Color="#FF19463F" Offset="1"/>
+                        <GradientStop Color="#FF28A897" Offset="0.382"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel x:Name="StackAnimation" HorizontalAlignment="Left" Height="230" Margin="4,0,0,0" VerticalAlignment="Top" Width="138">
+                    <Label Content="Username" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" Width="64" Background="{x:Null}" Foreground="#FFE0E0E0"/>
+                    <TextBox x:Name="tbLogin" Height="25" Margin="0,10,3,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Background="#FF64A492" BorderBrush="#FF272525" Foreground="Black"/>
+                    <Label Content="Password" HorizontalAlignment="Left" Margin="0,0,0,9" VerticalAlignment="Bottom" Width="64" Background="{x:Null}" Foreground="#FFE0E0E0"/>
+                    <PasswordBox x:Name="bPassword" HorizontalAlignment="Left" Height="26" Margin="0,0,0,9" VerticalAlignment="Bottom" Width="135" Background="#FF64A492" BorderBrush="#FF272525" Foreground="Black"/>
+                    <Grid >
+                        <Button x:Name="bLogin" Content="Login" Canvas.Left="172" Canvas.Top="139" Width="75" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Foreground="#FFE0E0E0" Background="#FF343434" Click="bLogin_Click"/>
+                        <Button x:Name="bRegister" Content="Reg" Canvas.Left="172" Canvas.Top="139" Width="58" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Foreground="#FFE0E0E0" Background="#FF343434" Margin="0,0,2,0" Click="bRegister_Click"/>
+                    </Grid>
+                    <Label Content="Confirm Password" HorizontalAlignment="Left" Margin="0,8,0,9" VerticalAlignment="Bottom" Width="128" Background="{x:Null}" Foreground="#FFE0E0E0"/>
+                    <PasswordBox x:Name="bConfirmPass" HorizontalAlignment="Left" Height="26" Margin="0,0,0,9" VerticalAlignment="Bottom" Width="135" Background="#FF64A492" BorderBrush="#FF272525" Foreground="Black"/>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+        <d3:ChartPlotter x:Name="plotter" Background="{x:Null}" BorderBrush="Black" Foreground="#FF30A882" Margin="213,0,286,10" Height="146" VerticalAlignment="Bottom">
+            <d3:ChartPlotter.HorizontalAxis>
+                <d3:HorizontalTimeSpanAxis x:Name="timeAxis"/>
+            </d3:ChartPlotter.HorizontalAxis>
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis x:Name="pingAxis"/>
+            </d3:ChartPlotter.VerticalAxis>
+
+            <d3:Header FontFamily="Segoe UI" Content="Network Latency" FontSize="12"/>
+            <d3:VerticalAxisTitle FontFamily="Segoe UI" Content="Ping" FontSize="12"/>
+            <d3:HorizontalAxisTitle FontFamily="Segoe UI" Content="Time" FontSize="12"/>
+        </d3:ChartPlotter>
+        <Label x:Name="NetworkPerformance_Label_Copy" Content="Broadcast listiner" HorizontalAlignment="Right" Height="28" Margin="0,0,83,128" VerticalAlignment="Bottom" Width="198" Foreground="#FF5F9EA0"/>
+        <Rectangle HorizontalAlignment="Left" Margin="91,0,0,53" Stroke="Black" Width="35" Height="16" VerticalAlignment="Bottom">
+            <Rectangle.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="#FF1FD350"/>
+                </RadialGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Label x:Name="Ping" Content="Ping" HorizontalAlignment="Left" Margin="10,0,0,48" Width="71" Foreground="#FF4EAC9B" Height="28" VerticalAlignment="Bottom"/>
+        <Label x:Name="Ping_Copy" Content="No. devices" HorizontalAlignment="Left" Margin="10,0,0,20" Width="71" Foreground="#FF4EAC9B" Height="28" VerticalAlignment="Bottom"/>
+        <Rectangle HorizontalAlignment="Left" Margin="91,0,0,27" Stroke="Black" Width="35" Height="16" VerticalAlignment="Bottom">
+            <Rectangle.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="#FF249FD8"/>
+                </RadialGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+    </Grid>
+</Window>

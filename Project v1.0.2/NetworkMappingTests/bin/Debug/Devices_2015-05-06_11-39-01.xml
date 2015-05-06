@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfDeviceDetails xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DeviceDetails>
+    <Os>Windows</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>10.10.20.30</IpAddress>
+    <Type>PC</Type>
+    <MacAddress>80:56:f2:2e:15:1f</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Linux</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>10.10.20.3</IpAddress>
+    <Type>Smartphone</Type>
+    <MacAddress>00:23:5e:8b:a4:c7</MacAddress>
+    <Latency>7</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Windows</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>10.10.20.2</IpAddress>
+    <Type>Smartphone</Type>
+    <MacAddress>00:18:ba:4a:05:47</MacAddress>
+    <Latency>8</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Windows</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>10.10.20.22</IpAddress>
+    <Type>Smartphone</Type>
+    <MacAddress>70:56:81:b3:bb:5b</MacAddress>
+    <Latency>13</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:13:1a:96:18:2d</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:a0</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:13:1a:96:18:20</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:a2</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:13:1a:96:18:27</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:13:1a:96:18:2e</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:ad</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:13:1a:96:18:22</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:13:1a:96:18:2f</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:13:1a:96:18:21</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:fe</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:ff</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f0</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f4</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:51</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:57</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:5d</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:5e</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:5f</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f2</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:50</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:54</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:59</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:52</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f9</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f1</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f7</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:fd</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:af</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:ab</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:a6</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:ae</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:a8</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>40:f4:ec:12:a7:7e</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>40:f4:ec:12:a7:7b</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>40:f4:ec:12:a7:76</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>40:f4:ec:12:a7:78</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>40:f4:ec:12:a7:7f</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:fb</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f6</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:cd:f8</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:58</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:5b</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:ee:56</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>40:f4:ec:12:a7:7d</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>84:db:ac:85:d8:00</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>00:08:2f:3a:f1:a1</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+  <DeviceDetails>
+    <Os>Unknown</Os>
+    <IsSNMPEnabled>false</IsSNMPEnabled>
+    <HostName>Unknown</HostName>
+    <IpAddress>0.0.0.0</IpAddress>
+    <Type>AccessPoint</Type>
+    <MacAddress>2c:8a:72:b3:ff:23</MacAddress>
+    <Latency>0</Latency>
+    <Description />
+  </DeviceDetails>
+</ArrayOfDeviceDetails>
