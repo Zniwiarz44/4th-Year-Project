@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/ipaddress"
+        android:id="@+id/tvIpAddress"
+        android:paddingTop="8dp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:background="@color/orange"
+        android:layout_gravity="center_horizontal" />
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="18dp"
+        android:background="#ff484848">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/subnet"
+            android:paddingTop="18dp"
+            android:id="@+id/tvSubnet"
+            android:textColor="@color/white"
+            android:autoText="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingTop="8dp"
+            android:textColor="@color/white"
+            android:text="@string/defaultGateway"
+
+            android:id="@+id/tvDefault" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/dns1"
+            android:paddingTop="18dp"
+            android:textColor="@color/white"
+            android:id="@+id/tvDNS1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/dns2"
+            android:paddingTop="8dp"
+            android:textColor="@color/white"
+            android:id="@+id/tvDNS2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/serverIP"
+            android:paddingTop="18dp"
+            android:textColor="@color/white"
+            android:id="@+id/tvServer" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/lease"
+            android:paddingTop="8dp"
+            android:paddingBottom="18dp"
+            android:textColor="@color/white"
+            android:id="@+id/tvLease" />
+
+        </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="@dimen/brake"
+        android:background="@color/orange"
+        android:id="@+id/textView2" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="18dp"
+        android:id="@+id/lvMenu"
+        android:background="#ffa3a3a7" />
+
+</LinearLayout>
