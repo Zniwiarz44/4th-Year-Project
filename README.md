@@ -4,7 +4,7 @@ This project is based around networking and provides basic discovery capabilitie
 To discover a network program performs a ping sweep for a network to which is connected. Than if not unchecked
 SNMP scan launches in order to retrive more detail information about each device. To determine devices a fingerprinting
 technique is uset which allows to determine the approximate OS running on a device. When the scan is completed
-program draws a map of discovered devices and then listens for SSD packets and broadcasts on the network. When a new device is connected and router broadcast forwarding is enabled the program caputes SSD requests and adds new devices to the map.
+program draws a map of discovered devices and then listens for ICMP packets and broadcasts on the network. When a new device is connected and router broadcast forwarding is enabled the program caputes ICMP requests and adds new devices to the map.
 
 While scanning a graph is being drawn to visualize the network performance. Ping and number of devices, each is color coded to make the visual more plesent to an eye. User can also compare 2 networks together.
 User of the program can Register/Login. This provides him with additional options for saving network maps on the cloud.
